@@ -4,41 +4,45 @@ function setup() {
   makePageForEpisodes(allEpisodes);
 }
 
-function makePageForEpisodes(episodeList) {
-  const rootElem = document.getElementById("root");
-  rootElem.textContent = `Got ${episodeList.length} episode(s)`;
+function makePageForEpisode(episode){
+  const {season,number} = episode;
+  const paddedSeason = season.toString().padStart(2,"0");
+  const paddedEpisode = number.toString().padStart(2,"0");
+ 
+  return `S${paddedSeason}E${paddedEpisode}`;
 }
-
-window.onload = setup;
-
 function makePageForEpisodes(episodeList) {
   const rootElem = document.getElementById("root");
+  rootElem.innerHTML="";
   episodeList.forEach((episode) => {
-    const episodeContainer = document.createElement("div");
-    episodeContainer.className = "episode";
+  
+  const list = document.createElement("li")
+  
+  const constParagraph = document.createElement("p");
+  constParagraph.innerText = `showing ${episodeList.length}episodes`;
+  list.appendChild( constParagraph);
+  
+  const image = document.createElement("img");
+  image.src = episode.image.medium;
+  list.appendChild(image);
 
-    const episodeName = document.createElement("h2");
-    episodeName.textContent = episode.name;
-    episodeContainer.appendChild(episodeName);
-
-    const episodeCode = document.createElement("h3");
-    episodeCode.textContent = `S${("0" + episode.season).slice(-2)}E${("0" + episode.number).slice(-2)}`;
-    episodeContainer.appendChild(episodeCode);
-
-    const episodeImage = document.createElement("img");
-    episodeImage.src = episode.image.medium;
-    episodeContainer.appendChild(episodeImage);
-
-    const episodeSummary = document.createElement("p");
-    episodeSummary.textContent = episode.summary;
-    episodeContainer.appendChild(episodeSummary);
-
-    rootElem.appendChild(episodeContainer);
-  });
-
-  const link = document.createElement("p");
-  link.innerHTML = `Data originally from <a href="https://www.tvmaze.com/">TVMaze.com</a>`;
-  rootElem.appendChild(link);
+  const summaryParagraph = document.createElement("p");
+  summaryParagraph.innerHTML = episode.summary;
+  list.appendChild(summaryParagraph);
+  rootElem.appendChild(list)
+  }); 
 }
+const searchInput = document.getElementById("search-input");
+searchInput.addEventListener("input", (e) => {
+  const searchTerms = e.target.value.toLowerCase();
+  const filteredEpisodes = getAllEpisodes().filter((episode) => {
+    // localeCompare might be neater here
+    return (
+      episode.summary.toLowerCase().includes(searchTerms) ||
+      episode.name.toLowerCase().includes(searchTerms)
+    );
+  });
+  makePageForEpisodes(filteredEpisodes);
+});
 
 window.onload = setup;
