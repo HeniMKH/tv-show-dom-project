@@ -19,8 +19,8 @@ function makePageForEpisodes(episodeList) {
   const list = document.createElement("li")
   
   const constParagraph = document.createElement("p");
-  constParagraph.innerText = `showing ${episodeList.length}episodes`;
-  list.appendChild( constParagraph);
+  constParagraph.innerText = episode.name;
+  list.appendChild( constParagraph)
   
   const image = document.createElement("img");
   image.src = episode.image.medium;
